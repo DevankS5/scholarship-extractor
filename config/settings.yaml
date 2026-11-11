@@ -1,0 +1,8 @@
+environment: local
+app_name: Scholarship Intelligence Crawler
+fetcher_version: "fetcher-1.0"
+parser_version: "parser-1.0"
+extractor_version: "extractor-1.0"
+verifier_version: "verifier-1.0"
+confidence_policy_version: "1.0"
+# Optional LLM / search settings come from environment variables (see .env.example).

@@ -1,0 +1,307 @@
+# Source registry & trust policy.
+# `reviewed: true` means a human confirmed the domain is controlled by the provider.
+# Domains below were selected from each provider's well-known public web presence; a reviewer
+# MUST re-confirm them (and robots.txt / terms) before relying on the output. Set reviewed: false
+# to downgrade a source to PRIMARY_LIKELY (=> records can never be VERIFIED).
+#
+# Fixture sources (is_fixture: true) use the fixture:// scheme and are SIMULATED providers used only
+# for tests/demos (change detection, stale handling). They are labelled FIXTURE everywhere in the UI
+# and are never counted as real records.
+sources:
+  # ---------------- Real sources ----------------
+  - key: nsp
+    name: National Scholarship Portal
+    provider_name: National Scholarship Portal
+    provider_aliases: ["National Scholarship Portal", "NSP", "Government of India"]
+    source_type: GOVERNMENT_PORTAL
+    authority_level: PRIMARY
+    homepage: https://scholarships.gov.in/
+    official_domains: [scholarships.gov.in]
+    application_domains: [scholarships.gov.in]
+    seed_urls: ["https://scholarships.gov.in/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Government of India's central scholarship portal (gov.in domain; referenced by ministries' own scheme pages)."
+
+  - key: ugc
+    name: University Grants Commission
+    provider_name: University Grants Commission
+    provider_aliases: ["University Grants Commission", "UGC"]
+    source_type: STATUTORY_BODY
+    authority_level: PRIMARY
+    homepage: https://www.ugc.gov.in/
+    official_domains: [ugc.gov.in]
+    application_domains: [scholarships.gov.in, ugcnet.nta.ac.in]
+    seed_urls: ["https://www.ugc.gov.in/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Statutory body under the Ministry of Education; gov.in domain."
+
+  - key: aicte
+    name: All India Council for Technical Education
+    provider_name: All India Council for Technical Education
+    provider_aliases: ["All India Council for Technical Education", "AICTE"]
+    source_type: STATUTORY_BODY
+    authority_level: PRIMARY
+    homepage: https://www.aicte-india.org/
+    official_domains: [aicte-india.org]
+    application_domains: [scholarships.gov.in]
+    seed_urls: ["https://www.aicte-india.org/schemes/students-development-schemes"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Statutory regulator of technical education; official AICTE website."
+
+  - key: moe
+    name: Ministry of Education
+    provider_name: Ministry of Education
+    provider_aliases: ["Ministry of Education", "Department of Higher Education", "Government of India"]
+    source_type: GOVERNMENT_DEPARTMENT
+    authority_level: PRIMARY
+    homepage: https://www.education.gov.in/
+    official_domains: [education.gov.in]
+    application_domains: [scholarships.gov.in]
+    seed_urls: ["https://www.education.gov.in/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Union Ministry of Education; gov.in domain."
+
+  - key: social_justice
+    name: Ministry of Social Justice and Empowerment
+    provider_name: Ministry of Social Justice and Empowerment
+    provider_aliases: ["Ministry of Social Justice and Empowerment", "Department of Social Justice"]
+    source_type: GOVERNMENT_DEPARTMENT
+    authority_level: PRIMARY
+    homepage: https://socialjustice.gov.in/
+    official_domains: [socialjustice.gov.in]
+    application_domains: [scholarships.gov.in]
+    seed_urls: ["https://socialjustice.gov.in/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Union ministry; gov.in domain."
+
+  - key: minority_affairs
+    name: Ministry of Minority Affairs
+    provider_name: Ministry of Minority Affairs
+    provider_aliases: ["Ministry of Minority Affairs"]
+    source_type: GOVERNMENT_DEPARTMENT
+    authority_level: PRIMARY
+    homepage: https://www.minorityaffairs.gov.in/
+    official_domains: [minorityaffairs.gov.in]
+    application_domains: [scholarships.gov.in]
+    seed_urls: ["https://www.minorityaffairs.gov.in/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Union ministry; gov.in domain."
+
+  - key: tata_trusts
+    name: Tata Trusts
+    provider_name: Tata Trusts
+    provider_aliases: ["Tata Trusts", "Sir Ratan Tata Trust", "Sir Dorabji Tata Trust"]
+    source_type: NGO_TRUST
+    authority_level: PRIMARY
+    homepage: https://www.tatatrusts.org/
+    official_domains: [tatatrusts.org]
+    application_domains: [tatatrusts.org]
+    seed_urls: ["https://www.tatatrusts.org/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Philanthropic trust's own website (organisation name and domain match)."
+
+  - key: reliance_foundation
+    name: Reliance Foundation
+    provider_name: Reliance Foundation
+    provider_aliases: ["Reliance Foundation"]
+    source_type: CORPORATE_CSR
+    authority_level: PRIMARY
+    homepage: https://www.reliancefoundation.org/
+    official_domains: [reliancefoundation.org]
+    application_domains: [reliancefoundation.org, scholarships.reliancefoundation.org]
+    seed_urls: ["https://www.reliancefoundation.org/"]
+    max_depth: 2
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Corporate CSR foundation's own website."
+
+  - key: chevening
+    name: Chevening Scholarships
+    provider_name: Chevening
+    provider_aliases: ["Chevening", "UK Foreign, Commonwealth & Development Office", "FCDO"]
+    source_type: INTERNATIONAL_PROVIDER
+    authority_level: PRIMARY
+    homepage: https://www.chevening.org/
+    official_domains: [chevening.org]
+    application_domains: [chevening.org]
+    seed_urls: ["https://www.chevening.org/scholarships/"]
+    max_depth: 1
+    request_delay_seconds: 2.5
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "UK government international scholarship programme's own site. Records are only verifiable if the page itself states eligibility for India."
+
+  # ---------------- Aggregators (leads only; disabled by default pending terms review) ----------------
+  - key: buddy4study
+    name: Buddy4Study (aggregator)
+    provider_name: Buddy4Study
+    provider_aliases: ["Buddy4Study"]
+    source_type: AGGREGATOR
+    authority_level: SECONDARY
+    homepage: https://www.buddy4study.com/
+    official_domains: [buddy4study.com]
+    seed_urls: ["https://www.buddy4study.com/scholarships"]
+    max_depth: 1
+    request_delay_seconds: 4
+    enabled: false
+    reviewed: true
+    reviewed_on: "2026-01-15"
+    rationale: "Third-party aggregator. Discovery lead only; can never produce VERIFIED records. Enable only after reviewing its terms/robots."
+
+  # ---------------- FIXTURE sources (simulated; for tests & demos) ----------------
+  - key: fx_dept
+    name: "[FIXTURE] Demo Department of Higher Education"
+    provider_name: Demo Department of Higher Education
+    provider_aliases: ["Demo Department of Higher Education"]
+    source_type: GOVERNMENT_DEPARTMENT
+    authority_level: PRIMARY
+    homepage: fixture://fx-education-dept.example/
+    official_domains: [fx-education-dept.example]
+    application_domains: [fx-education-dept.example, fx-scholarship-portal.example]
+    seed_urls: ["fixture://fx-education-dept.example/scholarships"]
+    max_depth: 2
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated provider used for tests. Not a real organisation."
+
+  - key: fx_university
+    name: "[FIXTURE] Demo Institute of Technology"
+    provider_name: Demo Institute of Technology
+    provider_aliases: ["Demo Institute of Technology"]
+    source_type: UNIVERSITY
+    authority_level: PRIMARY
+    homepage: fixture://fx-institute.example/
+    official_domains: [fx-institute.example]
+    application_domains: [fx-institute.example]
+    seed_urls: ["fixture://fx-institute.example/financial-aid"]
+    max_depth: 2
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated provider used for tests. Not a real organisation."
+
+  - key: fx_csr
+    name: "[FIXTURE] Demo Industries CSR Foundation"
+    provider_name: Demo Industries CSR Foundation
+    provider_aliases: ["Demo Industries CSR Foundation", "Demo Industries"]
+    source_type: CORPORATE_CSR
+    authority_level: PRIMARY
+    homepage: fixture://fx-csr-foundation.example/
+    official_domains: [fx-csr-foundation.example]
+    application_domains: [fx-csr-foundation.example]
+    seed_urls: ["fixture://fx-csr-foundation.example/programmes"]
+    max_depth: 2
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated provider used for tests. Not a real organisation."
+
+  - key: fx_trust
+    name: "[FIXTURE] Demo Education Trust"
+    provider_name: Demo Education Trust
+    provider_aliases: ["Demo Education Trust"]
+    source_type: NGO_TRUST
+    authority_level: PRIMARY
+    homepage: fixture://fx-trust.example/
+    official_domains: [fx-trust.example]
+    application_domains: [fx-trust.example]
+    seed_urls: ["fixture://fx-trust.example/grants"]
+    max_depth: 2
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated provider used for tests. Not a real organisation."
+
+  - key: fx_intl
+    name: "[FIXTURE] Demo Global Fellowship Foundation"
+    provider_name: Demo Global Fellowship Foundation
+    provider_aliases: ["Demo Global Fellowship Foundation"]
+    source_type: INTERNATIONAL_PROVIDER
+    authority_level: PRIMARY
+    homepage: fixture://fx-global-fellowship.example/
+    official_domains: [fx-global-fellowship.example]
+    application_domains: [fx-global-fellowship.example]
+    seed_urls: ["fixture://fx-global-fellowship.example/fellowships"]
+    max_depth: 2
+    request_delay_seconds: 0
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated provider used for tests. Not a real organisation."
+
+  - key: fx_unreviewed
+    name: "[FIXTURE] Demo Unreviewed Foundation"
+    provider_name: Demo Unreviewed Foundation
+    provider_aliases: ["Demo Unreviewed Foundation"]
+    source_type: FOUNDATION
+    authority_level: PRIMARY
+    homepage: fixture://fx-unreviewed.example/
+    official_domains: [fx-unreviewed.example]
+    application_domains: [fx-unreviewed.example]
+    seed_urls: ["fixture://fx-unreviewed.example/awards"]
+    max_depth: 1
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: false
+    is_fixture: true
+    rationale: "Simulated provider whose domain ownership has NOT been confirmed => PRIMARY_LIKELY only."
+
+  - key: fx_aggregator
+    name: "[FIXTURE] Demo Scholarship Aggregator"
+    provider_name: Demo Scholarship Aggregator
+    provider_aliases: ["Demo Scholarship Aggregator"]
+    source_type: AGGREGATOR
+    authority_level: SECONDARY
+    homepage: fixture://fx-aggregator.example/
+    official_domains: [fx-aggregator.example]
+    seed_urls: ["fixture://fx-aggregator.example/scholarships"]
+    max_depth: 1
+    request_delay_seconds: 0
+    enabled: true
+    reviewed: true
+    reviewed_on: "fixture"
+    is_fixture: true
+    rationale: "Simulated aggregator: leads only."

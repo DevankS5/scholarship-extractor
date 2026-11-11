@@ -1,0 +1,23 @@
+# Crawl behaviour. Tune per site policy; do not over-crawl small government/university sites.
+version: "1.0"
+http:
+  connect_timeout_ms: 15000
+  read_timeout_ms: 25000
+  max_response_bytes: 8000000
+  retries: 2                 # bounded retries for transient failures (timeouts, 429, 5xx)
+  backoff_base_ms: 1000
+  max_retry_after_ms: 10000
+  allowed_content_types: ["text/html", "application/xhtml+xml", "application/pdf"]
+budget:
+  max_pages_per_run: 120
+  max_candidates_stored_per_page: 60
+  max_sitemap_urls_per_source: 150
+  link_relevance_min_to_fetch: 3   # discovery score needed before a link is fetched
+  link_relevance_min_to_store: 1   # discovery score needed before a link is stored as a candidate
+lifecycle:
+  warning_window_days: 14          # EXPIRING_SOON window
+  stale_min_consecutive_failures: 3
+  stale_grace_period_days: 14      # days since last successful observation before NO_LONGER_VERIFIABLE
+  freshness_window_days: 60        # official observation older than this fails the presence gate
+  recheck_days_default: 7
+  recheck_days_near_deadline: 1
