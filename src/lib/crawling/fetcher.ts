@@ -1,6 +1,7 @@
 import { getCrawlPolicy, getSettings, userAgent } from "../config";
 import { sha256, sleep } from "../util";
 import { serveFixture } from "./fixtures";
+import { assertPublicUrl } from "./ssrf";
 import { normalizeHtml, normalizePdf, type NormalizedDocument } from "./normalize";
 
 export type ErrorCode =
@@ -89,29 +90,45 @@ async function rawFetch(url: string): Promise<RawResult> {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), policy.connect_timeout_ms + policy.read_timeout_ms);
   try {
-    const res = await fetch(url, {
-      signal: ctl.signal,
-      redirect: "follow",
-      headers: { "user-agent": userAgent(), accept: "text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.5", "accept-language": "en-IN,en;q=0.9" },
-    });
+    // Follow redirects manually so every hop is re-validated against private/loopback targets (SSRF guard).
+    let current = url;
+    let res!: Response;
+    for (let hop = 0; hop <= 5; hop++) {
+      await assertPublicUrl(current);
+      res = await fetch(current, {
+        signal: ctl.signal,
+        redirect: "manual",
+        headers: { "user-agent": userAgent(), accept: "text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.5", "accept-language": "en-IN,en;q=0.9" },
+      });
+      const loc = res.headers.get("location");
+      if (res.status >= 300 && res.status < 400 && loc) {
+        await res.body?.cancel();
+        current = new URL(loc, current).toString();
+        if (hop === 5) throw Object.assign(new Error("too many redirects"), { cause: { code: "REDIRECT_LIMIT" } });
+        continue;
+      }
+      break;
+    }
+    const finalUrl = current;
     const ra = res.headers.get("retry-after");
     const retryAfterMs = ra && /^\d+$/.test(ra) ? Math.min(+ra * 1000, policy.max_retry_after_ms) : undefined;
     const contentType = (res.headers.get("content-type") || "").toLowerCase();
     const declared = Number(res.headers.get("content-length") || 0);
     if (declared > policy.max_response_bytes) {
       await res.body?.cancel();
-      return { status: res.status, finalUrl: res.url || url, contentType, body: null, errorCode: "FILE_TOO_LARGE", errorMessage: `content-length ${declared} exceeds limit` };
+      return { status: res.status, finalUrl: finalUrl, contentType, body: null, errorCode: "FILE_TOO_LARGE", errorMessage: `content-length ${declared} exceeds limit` };
     }
     if (res.status >= 400) {
       await res.body?.cancel();
-      return { status: res.status, finalUrl: res.url || url, contentType, body: null, retryAfterMs };
+      return { status: res.status, finalUrl: finalUrl, contentType, body: null, retryAfterMs };
     }
     const body = await readLimited(res, policy.max_response_bytes);
-    if (!body) return { status: res.status, finalUrl: res.url || url, contentType, body: null, errorCode: "FILE_TOO_LARGE", errorMessage: "response exceeded size limit" };
-    return { status: res.status, finalUrl: res.url || url, contentType, body };
+    if (!body) return { status: res.status, finalUrl: finalUrl, contentType, body: null, errorCode: "FILE_TOO_LARGE", errorMessage: "response exceeded size limit" };
+    return { status: res.status, finalUrl: finalUrl, contentType, body };
   } catch (e) {
     const err = e as Error & { cause?: { code?: string } };
     const code = err.cause?.code ?? "";
+    if (err.message.startsWith("blocked ")) return { status: 0, finalUrl: url, contentType: "", body: null, errorCode: "NETWORK_ERROR", errorMessage: err.message };
     if (err.name === "AbortError") return { status: 0, finalUrl: url, contentType: "", body: null, errorCode: "CONNECTION_TIMEOUT", errorMessage: "request timed out" };
     if (code === "ENOTFOUND" || code === "EAI_AGAIN") return { status: 0, finalUrl: url, contentType: "", body: null, errorCode: "DNS_FAILURE", errorMessage: err.message };
     if (code === "UND_ERR_CONNECT_TIMEOUT" || code === "ETIMEDOUT") return { status: 0, finalUrl: url, contentType: "", body: null, errorCode: "CONNECTION_TIMEOUT", errorMessage: err.message };

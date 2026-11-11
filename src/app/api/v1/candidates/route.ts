@@ -20,6 +20,8 @@ export async function POST(req: Request) {
   if (!norm || norm.startsWith("fixture:")) return json({ error: "A valid http(s) URL is required." }, 400);
   const all = await syncSourceRegistry();
   const src = findSourceForUrl(norm, all);
+  // SSRF guard: only URLs on an enabled, registered source are queued (fetcher additionally blocks private addresses).
+  if (!src || !src.enabled || src.isFixture) return json({ error: "URL must belong to an enabled registered source." }, 400);
   const [row] = await db
     .insert(discoveredCandidates)
     .values({
