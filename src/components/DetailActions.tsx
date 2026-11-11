@@ -6,6 +6,7 @@ import { useState } from "react";
 export function DetailActions({ id, hasPending, rejected }: { id: string; hasPending: boolean; rejected: boolean }) {
   const router = useRouter();
   const [reviewer, setReviewer] = useState("");
+  const [token, setToken] = useState("");
   const [rationale, setRationale] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -14,7 +15,7 @@ export function DetailActions({ id, hasPending, rejected }: { id: string; hasPen
     setBusy(true);
     setMsg(null);
     try {
-      const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+      const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json", ...(token ? { authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(body) });
       const j = await r.json().catch(() => ({}));
       setMsg(r.ok ? ok : j.error ?? "Request failed");
       if (r.ok) setTimeout(() => router.refresh(), url.endsWith("reverify") ? 3500 : 0);
@@ -29,6 +30,7 @@ export function DetailActions({ id, hasPending, rejected }: { id: string; hasPen
         Re-verify now
       </button>
       <div className="grid gap-2">
+        <input type="password" value={token} onChange={(e) => setToken(e.target.value)} placeholder="Review token (REVIEW_TOKEN)" className="rounded-md border border-slate-300 px-2 py-1.5" />
         <input value={reviewer} onChange={(e) => setReviewer(e.target.value)} placeholder="Reviewer name" className="rounded-md border border-slate-300 px-2 py-1.5" />
         <textarea value={rationale} onChange={(e) => setRationale(e.target.value)} placeholder="Rationale (required, logged)" rows={2} className="rounded-md border border-slate-300 px-2 py-1.5" />
         <div className="flex flex-wrap gap-2">
