@@ -6,3 +6,7 @@ node_modules
 .vercel
 CLAUDE.md
 next-env.d.ts
+
+.vercel
+.env*
+.env.vercel
