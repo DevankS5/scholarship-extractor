@@ -13,3 +13,9 @@ describe("ssrf guard", () => {
     await expect(assertPublicUrl("http://8.8.8.8/")).resolves.toBeUndefined();
   });
 });
+
+describe("ssrf guard: ipv6 forms", () => {
+  it("blocks hex-form mapped/compatible addresses and unparsable input", () => {
+    for (const ip of ["::ffff:7f00:1", "::ffff:a9fe:a9fe", "::7f00:1", "fe80::1", "not-an-ip"]) expect(isPrivateIp(ip)).toBe(true);
+  });
+});

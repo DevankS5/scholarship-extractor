@@ -1,7 +1,7 @@
 import { getCrawlPolicy, getSettings, userAgent } from "../config";
 import { sha256, sleep } from "../util";
 import { serveFixture } from "./fixtures";
-import { assertPublicUrl } from "./ssrf";
+import { assertPublicUrl, safeDispatcher } from "./ssrf";
 import { normalizeHtml, normalizePdf, type NormalizedDocument } from "./normalize";
 
 export type ErrorCode =
@@ -98,6 +98,8 @@ async function rawFetch(url: string): Promise<RawResult> {
       res = await fetch(current, {
         signal: ctl.signal,
         redirect: "manual",
+        // @ts-expect-error undici dispatcher option is not in the DOM fetch types
+        dispatcher: safeDispatcher,
         headers: { "user-agent": userAgent(), accept: "text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.5", "accept-language": "en-IN,en;q=0.9" },
       });
       const loc = res.headers.get("location");
