@@ -188,8 +188,8 @@ sources:
     source_type: NGO_TRUST
     authority_level: PRIMARY
     homepage: https://www.akdn.org/
-    official_domains: [akdn.org]
-    application_domains: [akdn.org]
+    official_domains: [akdn.org, the.akdn]
+    application_domains: [akdn.org, the.akdn]
     seed_urls: ["https://www.akdn.org/our-agencies/aga-khan-foundation/international-scholarship-programme"]
     max_depth: 0
     request_delay_seconds: 2.5
