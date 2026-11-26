@@ -15,23 +15,28 @@ const FIELDS = [...TEXT_FIELDS, "closing_date"] as const;
 const gemini = () => !!process.env.GEMINI_API_KEY;
 const ollama = () => process.env.OLLAMA_ENABLED === "true" && !!process.env.OLLAMA_URL;
 export const llmEnabled = () => gemini() || ollama();
-export const llmLabel = () => (gemini() ? `gemini:${process.env.GEMINI_MODEL || "gemini-2.5-flash"}` : ollama() ? `ollama:${process.env.OLLAMA_MODEL || "llama3.1:8b"}` : "none");
+const geminiModels = () => (process.env.GEMINI_MODEL || "gemini-3.5-flash,gemini-3.5-flash-lite,gemini-flash-latest").split(",").map((m) => m.trim()).filter(Boolean);
+export const llmLabel = () => (gemini() ? `gemini:${geminiModels()[0]}` : ollama() ? `ollama:${process.env.OLLAMA_MODEL || "llama3.1:8b"}` : "none");
 
 async function complete(prompt: string, signal: AbortSignal): Promise<string | null> {
   if (gemini()) {
-    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST",
-      signal,
-      headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } },
-      }),
-    });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-    return body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? null;
+    // GEMINI_MODEL may list several models: free-tier quotas are per model, so fall through on 429.
+    for (const model of geminiModels()) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST",
+        signal,
+        headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0, responseMimeType: "application/json" },
+        }),
+      });
+      if (res.status === 429) continue;
+      if (!res.ok) return null;
+      const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+      return body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? null;
+    }
+    return null;
   }
   const res = await fetch(`${process.env.OLLAMA_URL}/api/generate`, {
     method: "POST",
