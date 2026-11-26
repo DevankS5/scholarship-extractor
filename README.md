@@ -3,6 +3,16 @@
 An evidence-first system that **discovers → classifies → fetches → extracts → resolves the official source → verifies → scores → persists → displays → re-crawls → detects change** for scholarships open to Indian students.
 Built as a modular monolith on **Next.js (App Router) + PostgreSQL (Drizzle ORM)**. No paid API, scraping service or LLM is required; everything works without any keys.
 
+**Live: https://scholarship-extractor.vercel.app** (Neon Postgres). Real records from live crawls on 26 Nov 2026 sit next to the labelled `FIXTURE` demo records; filter by source to see only real ones.
+
+### LLM stage: Gemini
+
+Set `GEMINI_API_KEY` (and optionally `GEMINI_MODEL`, a comma-separated fallback list such as `gemini-3.5-flash,gemini-3.5-flash-lite`, because free-tier quotas are per model per day). The model only fills fields the rules left empty (description, eligibility, selection, renewal, how to apply, a dated deadline whose year appears in the quote); every quote is checked against the stored page text and the field is marked partially supported, so an LLM value can never make a record `VERIFIED` on its own. Ollama still works when `OLLAMA_ENABLED=true` and no Gemini key is set.
+
+```bash
+npx tsx scripts/run-crawl.ts --scope LIVE --max-pages 30 --sources inlaks,akdn,rhodes,chevening
+```
+
 ## Quick start
 
 ```bash
