@@ -120,7 +120,7 @@ sources:
     homepage: https://www.tatatrusts.org/
     official_domains: [tatatrusts.org]
     application_domains: [tatatrusts.org]
-    seed_urls: ["https://www.tatatrusts.org/"]
+    seed_urls: ["https://www.tatatrusts.org/our-work/individual-grants-programme/education-grants", "https://www.tatatrusts.org/"]
     max_depth: 2
     request_delay_seconds: 2.5
     enabled: true
@@ -154,7 +154,7 @@ sources:
     homepage: https://www.chevening.org/
     official_domains: [chevening.org]
     application_domains: [chevening.org]
-    seed_urls: ["https://www.chevening.org/scholarships/"]
+    seed_urls: ["https://www.chevening.org/scholarships/", "https://www.chevening.org/scholarships/who-can-apply/"]
     max_depth: 1
     request_delay_seconds: 2.5
     requires_india_eligibility_evidence: true
@@ -162,6 +162,112 @@ sources:
     reviewed: true
     reviewed_on: "2026-01-15"
     rationale: "UK government international scholarship programme's own site. Records are only verifiable if the page itself states eligibility for India."
+
+  - key: commonwealth
+    name: Commonwealth Scholarship Commission in the UK
+    provider_name: Commonwealth Scholarship Commission
+    provider_aliases: ["Commonwealth Scholarship Commission", "CSC", "Commonwealth Scholarship Commission in the UK"]
+    source_type: INTERNATIONAL_PROVIDER
+    authority_level: PRIMARY
+    homepage: https://cscuk.fcdo.gov.uk/
+    official_domains: [cscuk.fcdo.gov.uk]
+    application_domains: [cscuk.fcdo.gov.uk]
+    seed_urls: ["https://cscuk.fcdo.gov.uk/scholarships/commonwealth-masters-scholarships/", "https://cscuk.fcdo.gov.uk/scholarships/commonwealth-phd-scholarships/", "https://cscuk.fcdo.gov.uk/scholarships/commonwealth-shared-scholarships/"]
+    max_depth: 0
+    request_delay_seconds: 2.5
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "UK government-funded commission; fcdo.gov.uk subdomain. India is a listed eligible Commonwealth country only when the page says so."
+
+  - key: akdn
+    name: Aga Khan Foundation International Scholarship Programme
+    provider_name: Aga Khan Foundation
+    provider_aliases: ["Aga Khan Foundation", "AKDN", "Aga Khan Development Network"]
+    source_type: NGO_TRUST
+    authority_level: PRIMARY
+    homepage: https://www.akdn.org/
+    official_domains: [akdn.org, the.akdn]
+    application_domains: [akdn.org, the.akdn]
+    seed_urls: ["https://www.akdn.org/our-agencies/aga-khan-foundation/international-scholarship-programme"]
+    max_depth: 0
+    request_delay_seconds: 2.5
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "Foundation programme page on the Aga Khan Development Network domain."
+
+  - key: gates_cambridge
+    name: Gates Cambridge Scholarship
+    provider_name: Gates Cambridge Trust
+    provider_aliases: ["Gates Cambridge", "Gates Cambridge Trust"]
+    source_type: INTERNATIONAL_PROVIDER
+    authority_level: PRIMARY
+    homepage: https://www.gatescambridge.org/
+    official_domains: [gatescambridge.org]
+    application_domains: [gatescambridge.org]
+    seed_urls: ["https://www.gatescambridge.org/apply/eligibility/", "https://www.gatescambridge.org/apply/"]
+    max_depth: 0
+    request_delay_seconds: 2.5
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "Trust-run scholarship site for the University of Cambridge programme."
+
+  - key: rhodes
+    name: Rhodes Scholarship
+    provider_name: Rhodes Trust
+    provider_aliases: ["Rhodes Trust", "Rhodes House"]
+    source_type: INTERNATIONAL_PROVIDER
+    authority_level: PRIMARY
+    homepage: https://www.rhodeshouse.ox.ac.uk/
+    official_domains: [rhodeshouse.ox.ac.uk]
+    application_domains: [rhodeshouse.ox.ac.uk]
+    seed_urls: ["https://www.rhodeshouse.ox.ac.uk/scholarships/the-rhodes-scholarship/", "https://www.rhodeshouse.ox.ac.uk/scholarships/applications/india/"]
+    max_depth: 0
+    request_delay_seconds: 2.5
+    requires_india_eligibility_evidence: true
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "Rhodes Trust site on the ox.ac.uk domain; constituency page for India."
+
+  - key: inlaks
+    name: Inlaks Shivdasani Foundation
+    provider_name: Inlaks Shivdasani Foundation
+    provider_aliases: ["Inlaks Shivdasani Foundation", "Inlaks"]
+    source_type: NGO_TRUST
+    authority_level: PRIMARY
+    homepage: https://www.inlaksfoundation.org/
+    official_domains: [inlaksfoundation.org]
+    application_domains: [inlaksfoundation.org]
+    seed_urls: ["https://www.inlaksfoundation.org/scholarships/"]
+    max_depth: 1
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "Indian foundation own website (name and domain match)."
+
+  - key: jn_tata
+    name: J N Tata Endowment
+    provider_name: J N Tata Endowment
+    provider_aliases: ["J N Tata Endowment", "JN Tata Endowment", "The J N Tata Endowment"]
+    source_type: NGO_TRUST
+    authority_level: PRIMARY
+    homepage: https://www.jntataendowment.org/
+    official_domains: [jntataendowment.org]
+    application_domains: [jntataendowment.org]
+    seed_urls: ["https://www.jntataendowment.org/"]
+    max_depth: 1
+    request_delay_seconds: 2.5
+    enabled: true
+    reviewed: true
+    reviewed_on: "2026-11-26"
+    rationale: "Tata group endowment own website for loan scholarships for higher studies abroad."
 
   # ---------------- Aggregators (leads only; disabled by default pending terms review) ----------------
   - key: buddy4study

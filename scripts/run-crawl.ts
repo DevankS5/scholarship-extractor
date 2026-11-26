@@ -19,6 +19,7 @@ async function main() {
     asOf: arg("as-of") ?? null,
     maxPages: arg("max-pages") ? Number(arg("max-pages")) : undefined,
     reverifyOnly: process.argv.includes("--reverify-only"),
+    sourceKeys: arg("sources")?.split(","),
   });
   if (r.runId) {
     const run = (await db.select().from(crawlRuns).where(eq(crawlRuns.id, r.runId)))[0];
