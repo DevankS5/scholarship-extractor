@@ -96,6 +96,20 @@ function sentenceAround(line: Line, text: string, idx: number, len: number): { q
   return { quote: q, start: text.indexOf(q, line.start) };
 }
 
+/** Shared by the rule stage and the LLM stage, so both classify pages by the same rule. */
+export function classifyPage(fields: Record<string, FieldValue>, sig: { explicitOpen: boolean }) {
+  const pageSignals: string[] = [];
+  if (fields.eligibility_summary) pageSignals.push("eligibility");
+  if (fields.amount || fields.benefit_type) pageSignals.push("benefit");
+  if (fields.closing_date || fields.opening_date || sig.explicitOpen) pageSignals.push("dates");
+  if (fields.application_url || fields.application_instructions) pageSignals.push("how_to_apply");
+  if (fields.documents_required) pageSignals.push("documents");
+  if (fields.selection_process) pageSignals.push("selection");
+  const nm = fields.name?.value as string | undefined;
+  const isScholarshipPage = !!nm && NAME_KEYWORDS.test(nm) && pageSignals.length >= 3 && (pageSignals.includes("eligibility") || pageSignals.includes("benefit"));
+  return { pageSignals, isScholarshipPage };
+}
+
 export function extractScholarship(doc: NormalizedDocument, ctx: ExtractContext = {}): ExtractionResult {
   const text = doc.text;
   const lines = parseLines(text);
@@ -406,15 +420,7 @@ export function extractScholarship(doc: NormalizedDocument, ctx: ExtractContext 
   if (indiaInElig) put("india_eligibility", true, null, indiaInElig.t.slice(0, 300), indiaInElig.start, "KEYWORD", eligSec?.heading ?? null);
 
   // ---------------- page classification (listing/news pages are NOT scholarship records)
-  const pageSignals: string[] = [];
-  if (fields.eligibility_summary) pageSignals.push("eligibility");
-  if (fields.amount || fields.benefit_type) pageSignals.push("benefit");
-  if (fields.closing_date || fields.opening_date || sig.explicitOpen) pageSignals.push("dates");
-  if (fields.application_url || fields.application_instructions) pageSignals.push("how_to_apply");
-  if (fields.documents_required) pageSignals.push("documents");
-  if (fields.selection_process) pageSignals.push("selection");
-  const nm = fields.name?.value as string | undefined;
-  const isScholarshipPage = !!nm && NAME_KEYWORDS.test(nm) && pageSignals.length >= 3 && (pageSignals.includes("eligibility") || pageSignals.includes("benefit"));
+  const { pageSignals, isScholarshipPage } = classifyPage(fields, sig);
 
   if (!fields.application_url) flags.push("APPLICATION_LINK_MISSING");
   if (doc.kind === "PDF") flags.push("PDF_ONLY_SOURCE");
